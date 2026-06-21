@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Restaurant Menu Dashboard</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(
+        -45deg,
+        #141E30,
+        #243B55,
+        #0F2027,
+        #2C5364
+    );
+    background-size:400% 400%;
+    animation:bg 10s ease infinite;
+}
+
+@keyframes bg{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+.dashboard{
+    padding:40px;
+}
+
+.hero{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(15px);
+    border-radius:25px;
+    padding:30px;
+    color:white;
+    box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
+
+.hero h1{
+    font-size:3rem;
+    font-weight:700;
+}
+
+.hero p{
+    opacity:.8;
+}
+
+.add-btn{
+    background:linear-gradient(
+        45deg,
+        #00c853,
+        #64dd17
+    );
+}
+
+.action-btn{
+    text-decoration:none;
+    color:white;
+    padding:12px 25px;
+    border-radius:50px;
+    display:inline-block;
+    font-weight:600;
+    transition:.4s;
+}
+
+.action-btn:hover{
+    transform:translateY(-5px);
+}
+
+.stats{
+    margin:30px 0;
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+.stat-box{
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(12px);
+
+    border-radius:20px;
+
+    padding:25px;
+
+    color:white;
+
+    text-align:center;
+
+    transition:.4s;
+}
+
+.stat-box:hover{
+    transform:translateY(-10px);
+}
+
+.stat-box h2{
+    font-size:2rem;
+    font-weight:700;
+}
+
+.buttons{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.search-btn{
+    background:linear-gradient(
+        45deg,
+        #2196f3,
+        #00b0ff
+    );
+}
+
+.filter-container{
+    display:inline-block;
+    position:relative;
+    margin-left:10px;
+}
+
+.filter-btn{
+    border:none;
+    color:white;
+    cursor:pointer;
+
+    padding:12px 25px;
+
+    border-radius:50px;
+
+    font-weight:600;
+
+    background:linear-gradient(
+        45deg,
+        #8e2de2,
+        #4a00e0
+    );
+
+    transition:.4s;
+}
+
+.filter-btn:hover{
+    transform:translateY(-5px);
+}
+
+.filter-menu{
+
+    display:none;
+
+    position:absolute;
+
+    top:60px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    min-width:220px;
+
+    background:rgba(255,255,255,.1);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:15px;
+
+    overflow:hidden;
+
+    z-index:999;
+}
+
+.filter-menu a{
+    display:block;
+    padding:15px;
+    color:black;
+    text-decoration:none;
+}
+
+.filter-menu a:hover{
+    background:rgba(255,255,255,.15);
+}
+
+.table-card{
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:25px;
+
+    padding:20px;
+
+    color:white;
+}
+
+.table{
+    color:white;
+}
+
+.table thead{
+    background:linear-gradient(
+        90deg,
+        #6a11cb,
+        #2575fc
+    );
+}
+
+.table tbody tr:hover{
+    background:rgba(255,255,255,.08);
+}
+
+.badge-category{
+    background:#2196f3;
+    padding:8px 12px;
+    border-radius:20px;
+}
+
+.badge-quantity{
+    background:#00c853;
+    padding:8px 12px;
+    border-radius:20px;
+}
+
+.rating{
+    color:gold;
+}
+
+.edit-btn{
+    background:#2196f3;
+}
+
+.delete-btn{
+    background:#ff1744;
+}
+
+.edit-btn,
+.delete-btn{
+    border:none;
+    color:white;
+    padding:7px 12px;
+    border-radius:10px;
+    text-decoration:none;
+}
+
+.empty{
+    color:white;
+    text-align:center;
+    padding:30px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container dashboard">
+
+<div class="hero d-flex justify-content-between align-items-center">
+
+<div>
+<h1>🍔 Restaurant Dashboard</h1>
+<p>Restaurant Menu Management System</p>
+</div>
+
+<a href="/add" class="action-btn add-btn">
+➕ Add Food
+</a>
+
+</div>
+
+<div class="stats">
+
+<div class="stat-box">
+<h2><%= foods.length %></h2>
+<p>Total Foods</p>
+</div>
+
+<div class="stat-box">
+<h2>⭐ 5.0</h2>
+<p>Ratings</p>
+</div>
+
+<div class="stat-box">
+<h2>🍽️</h2>
+<p>Menu Items</p>
+</div>
+
+<div class="stat-box">
+<h2>🚀</h2>
+<p>Management</p>
+</div>
+
+</div>
+
+<div class="buttons">
+
+<a href="/search" class="action-btn search-btn">
+🔍 Search Food
+</a>
+
+<div class="filter-container">
+
+<button
+class="filter-btn"
+onclick="toggleFilter()"
+>
+⚙️ Filters
+</button>
+
+<div id="filterMenu" class="filter-menu">
+
+<a href="/?sort=asc">
+⬆ Price: Low → High
+</a>
+
+<a href="/?sort=desc">
+⬇ Price: High → Low
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="table-card">
+
+<% if(foods.length === 0){ %>
+
+<div class="empty">
+<h3>No Food Items Found</h3>
+</div>
+
+<% } else { %>
+
+<table class="table table-borderless">
+
+<thead>
+
+<tr>
+<th>Food Name</th>
+<th>Category</th>
+<th>Price</th>
+<th>Quantity</th>
+<th>Rating</th>
+<th>Actions</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<% foods.forEach(food => { %>
+
+<tr>
+
+<td><%= food.foodName %></td>
+
+<td>
+<span class="badge-category">
+<%= food.category %>
+</span>
+</td>
+
+<td>₹ <%= food.price %></td>
+
+<td>
+<span class="badge-quantity">
+<%= food.quantity %>
+</span>
+</td>
+
+<td class="rating">
+⭐ <%= food.rating %>
+</td>
+
+<td>
+
+<a
+href="/edit/<%= food._id %>"
+class="edit-btn"
+>
+✏ Edit
+</a>
+
+<form
+action="/delete/<%= food._id %>"
+method="POST"
+style="display:inline;"
+>
+
+<button
+type="submit"
+class="delete-btn"
+>
+🗑 Delete
+</button>
+
+</form>
+
+</td>
+
+</tr>
+
+<% }) %>
+
+</tbody>
+
+</table>
+
+<% } %>
+
+</div>
+
+</div>
+
+<script>
+
+function toggleFilter(){
+
+const menu =
+document.getElementById("filterMenu");
+
+if(menu.style.display==="block"){
+menu.style.display="none";
+}
+else{
+menu.style.display="block";
+}
+
+}
+
+window.onclick=function(event){
+
+if(!event.target.matches('.filter-btn')){
+
+const menu=
+document.getElementById("filterMenu");
+
+if(menu.style.display==="block"){
+menu.style.display="none";
+}
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
