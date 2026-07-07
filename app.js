@@ -27,10 +27,16 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
+
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url} - Body:`, req.body);
+    next();
+});
 
 /* =======================
    HOME PAGE
-======================= */
+// ======================= */
 
 app.get("/", async (req, res) => {
 
@@ -48,7 +54,29 @@ app.get("/", async (req, res) => {
         foods = await Food.find();
     }
 
-    res.render("index", { foods });
+    // Calculate advanced dashboard statistics
+    const allFoods = await Food.find();
+    const totalFoods = allFoods.length;
+    let avgRating = "0.0";
+    let totalValue = 0;
+    let lowStock = 0;
+
+    if (totalFoods > 0) {
+        const ratingSum = allFoods.reduce((sum, f) => sum + (f.rating || 0), 0);
+        avgRating = (ratingSum / totalFoods).toFixed(1);
+        totalValue = allFoods.reduce((sum, f) => sum + ((f.price || 0) * (f.quantity || 0)), 0);
+        lowStock = allFoods.filter(f => (f.quantity || 0) < 5).length;
+    }
+
+    res.render("index", { 
+        foods,
+        stats: {
+            totalFoods,
+            avgRating,
+            totalValue,
+            lowStock
+        }
+    });
 });
 
 /* =======================
@@ -118,24 +146,6 @@ app.get("/search", async (req, res) => {
     });
 });
 
-app.get("/", async (req, res) => {
-
-    const sort = req.query.sort;
-
-    let foods;
-
-    if(sort === "asc"){
-        foods = await Food.find().sort({ price: 1 });
-    }
-    else if(sort === "desc"){
-        foods = await Food.find().sort({ price: -1 });
-    }
-    else{
-        foods = await Food.find();
-    }
-
-    res.render("index", { foods });
-});
 
 const PORT = 3000;
 

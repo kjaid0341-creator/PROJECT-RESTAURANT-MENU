@@ -1,62 +1,143 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Edit Food</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Menu Item - Gusto Bistro</title>
+    
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="/css/style.css">
 </head>
+<body>
 
-<body class="bg-light">
+    <div class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+        
+        <div class="glass-container glass-form-card fade-in-element">
+            
+            <div class="form-header">
+                <div class="icon-container" style="background: rgba(59, 130, 246, 0.12); border-color: rgba(59, 130, 246, 0.25); color: #3b82f6;">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <h2>Edit Food Item</h2>
+                <p>Modify and update menu item details for <%= food.foodName %></p>
+            </div>
 
-<div class="container mt-5">
+            <!-- BUG FIX: Action updated from /update/:id to /edit/:id to match backend route -->
+            <form action="/edit/<%= food._id %>" method="POST" class="premium-form">
+                
+                <!-- Food Name -->
+                <div class="form-group-custom">
+                    <label for="foodName">Food Name</label>
+                    <div class="input-icon-wrapper">
+                        <input 
+                            type="text" 
+                            id="foodName"
+                            name="foodName" 
+                            value="<%= food.foodName %>"
+                            class="input-premium" 
+                            placeholder="Enter Food Name"
+                            required
+                        >
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                </div>
 
-    <div class="card shadow p-4">
+                <!-- Category -->
+                <div class="form-group-custom">
+                    <label for="category">Category</label>
+                    <div class="input-icon-wrapper">
+                        <input 
+                            type="text" 
+                            id="category"
+                            name="category" 
+                            value="<%= food.category %>"
+                            class="input-premium" 
+                            placeholder="Enter Category"
+                            required
+                        >
+                        <i class="fas fa-tag"></i>
+                    </div>
+                </div>
 
-        <h2 class="text-center text-primary">
-            Edit Food
-        </h2>
+                <div class="row">
+                    <!-- Price -->
+                    <div class="col-md-6 form-group-custom">
+                        <label for="price">Price (₹)</label>
+                        <div class="input-icon-wrapper">
+                            <input 
+                                type="number" 
+                                id="price"
+                                name="price" 
+                                value="<%= food.price %>"
+                                class="input-premium" 
+                                placeholder="Enter Price"
+                                min="0"
+                                required
+                            >
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                    </div>
 
-        <form action="/update/<%= food._id %>" method="POST">
+                    <!-- Quantity -->
+                    <div class="col-md-6 form-group-custom">
+                        <label for="quantity">Quantity (Stock)</label>
+                        <div class="input-icon-wrapper">
+                            <input 
+                                type="number" 
+                                id="quantity"
+                                name="quantity" 
+                                value="<%= food.quantity %>"
+                                class="input-premium" 
+                                placeholder="Enter Quantity"
+                                min="0"
+                                required
+                            >
+                            <i class="fas fa-cubes"></i>
+                        </div>
+                    </div>
+                </div>
 
-            <input
-                type="text"
-                name="foodName"
-                value="<%= food.foodName %>"
-                class="form-control mb-3">
+                <!-- Rating -->
+                <div class="form-group-custom">
+                    <label for="rating">Rating (1.0 - 5.0)</label>
+                    <div class="input-icon-wrapper">
+                        <input 
+                            type="number" 
+                            id="rating"
+                            step="0.1" 
+                            min="1.0" 
+                            max="5.0" 
+                            name="rating" 
+                            value="<%= food.rating %>"
+                            class="input-premium" 
+                            placeholder="Enter Rating (1-5)"
+                            required
+                        >
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
 
-            <input
-                type="text"
-                name="category"
-                value="<%= food.category %>"
-                class="form-control mb-3">
+                <!-- Submit Button -->
+                <button type="submit" class="btn-action-main btn-form-submit" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);">
+                    <i class="fas fa-check-circle"></i> Update Food Item
+                </button>
 
-            <input
-                type="number"
-                name="price"
-                value="<%= food.price %>"
-                class="form-control mb-3">
+            </form>
 
-            <input
-                type="number"
-                name="quantity"
-                value="<%= food.quantity %>"
-                class="form-control mb-3">
+            <!-- Back Link -->
+            <a href="/" class="back-link">
+                <i class="fas fa-arrow-left-long"></i> Back to Dashboard
+            </a>
 
-            <input
-                type="number"
-                step="0.1"
-                name="rating"
-                value="<%= food.rating %>"
-                class="form-control mb-3">
-
-            <button class="btn btn-primary w-100">
-                Update Food
-            </button>
-
-        </form>
+        </div>
 
     </div>
-
-</div>
 
 </body>
 </html>

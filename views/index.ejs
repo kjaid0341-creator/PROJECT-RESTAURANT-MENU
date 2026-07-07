@@ -1,468 +1,348 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Restaurant Menu Dashboard</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
-
-body{
-    min-height:100vh;
-    background:linear-gradient(
-        -45deg,
-        #141E30,
-        #243B55,
-        #0F2027,
-        #2C5364
-    );
-    background-size:400% 400%;
-    animation:bg 10s ease infinite;
-}
-
-@keyframes bg{
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
-}
-
-.dashboard{
-    padding:40px;
-}
-
-.hero{
-    background:rgba(255,255,255,0.08);
-    backdrop-filter:blur(15px);
-    border-radius:25px;
-    padding:30px;
-    color:white;
-    box-shadow:0 10px 30px rgba(0,0,0,.4);
-}
-
-.hero h1{
-    font-size:3rem;
-    font-weight:700;
-}
-
-.hero p{
-    opacity:.8;
-}
-
-.add-btn{
-    background:linear-gradient(
-        45deg,
-        #00c853,
-        #64dd17
-    );
-}
-
-.action-btn{
-    text-decoration:none;
-    color:white;
-    padding:12px 25px;
-    border-radius:50px;
-    display:inline-block;
-    font-weight:600;
-    transition:.4s;
-}
-
-.action-btn:hover{
-    transform:translateY(-5px);
-}
-
-.stats{
-    margin:30px 0;
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
-
-    gap:20px;
-}
-
-.stat-box{
-    background:rgba(255,255,255,.08);
-
-    backdrop-filter:blur(12px);
-
-    border-radius:20px;
-
-    padding:25px;
-
-    color:white;
-
-    text-align:center;
-
-    transition:.4s;
-}
-
-.stat-box:hover{
-    transform:translateY(-10px);
-}
-
-.stat-box h2{
-    font-size:2rem;
-    font-weight:700;
-}
-
-.buttons{
-    text-align:center;
-    margin-bottom:30px;
-}
-
-.search-btn{
-    background:linear-gradient(
-        45deg,
-        #2196f3,
-        #00b0ff
-    );
-}
-
-.filter-container{
-    display:inline-block;
-    position:relative;
-    margin-left:10px;
-}
-
-.filter-btn{
-    border:none;
-    color:white;
-    cursor:pointer;
-
-    padding:12px 25px;
-
-    border-radius:50px;
-
-    font-weight:600;
-
-    background:linear-gradient(
-        45deg,
-        #8e2de2,
-        #4a00e0
-    );
-
-    transition:.4s;
-}
-
-.filter-btn:hover{
-    transform:translateY(-5px);
-}
-
-.filter-menu{
-
-    display:none;
-
-    position:absolute;
-
-    top:60px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    min-width:220px;
-
-    background:rgba(255,255,255,.1);
-
-    backdrop-filter:blur(15px);
-
-    border-radius:15px;
-
-    overflow:hidden;
-
-    z-index:999;
-}
-
-.filter-menu a{
-    display:block;
-    padding:15px;
-    color:black;
-    text-decoration:none;
-}
-
-.filter-menu a:hover{
-    background:rgba(255,255,255,.15);
-}
-
-.table-card{
-    background:rgba(255,255,255,.08);
-
-    backdrop-filter:blur(15px);
-
-    border-radius:25px;
-
-    padding:20px;
-
-    color:white;
-}
-
-.table{
-    color:white;
-}
-
-.table thead{
-    background:linear-gradient(
-        90deg,
-        #6a11cb,
-        #2575fc
-    );
-}
-
-.table tbody tr:hover{
-    background:rgba(255,255,255,.08);
-}
-
-.badge-category{
-    background:#2196f3;
-    padding:8px 12px;
-    border-radius:20px;
-}
-
-.badge-quantity{
-    background:#00c853;
-    padding:8px 12px;
-    border-radius:20px;
-}
-
-.rating{
-    color:gold;
-}
-
-.edit-btn{
-    background:#2196f3;
-}
-
-.delete-btn{
-    background:#ff1744;
-}
-
-.edit-btn,
-.delete-btn{
-    border:none;
-    color:white;
-    padding:7px 12px;
-    border-radius:10px;
-    text-decoration:none;
-}
-
-.empty{
-    color:white;
-    text-align:center;
-    padding:30px;
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Premium Restaurant Menu Dashboard - Manage food items, stock, pricing and customer ratings.">
+    <title>Gusto Bistro - Premium Menu Hub</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-
 <body>
 
-<div class="container dashboard">
+    <!-- EJS Helper Functions -->
+    <% 
+        function getFoodEmoji(name, category) {
+            const term = (name + " " + category).toLowerCase();
+            if (term.includes("burger")) return "🍔";
+            if (term.includes("pizza")) return "🍕";
+            if (term.includes("noodle") || term.includes("pasta") || term.includes("chow")) return "🍝";
+            if (term.includes("rice") || term.includes("biryani") || term.includes("pulao")) return "🍛";
+            if (term.includes("drink") || term.includes("juice") || term.includes("coke") || term.includes("soda") || term.includes("water") || term.includes("tea") || term.includes("coffee") || term.includes("shake")) return "🍹";
+            if (term.includes("cake") || term.includes("pastry") || term.includes("dessert") || term.includes("sweet") || term.includes("ice cream") || term.includes("donut")) return "🍰";
+            if (term.includes("salad")) return "🥗";
+            if (term.includes("chicken") || term.includes("meat") || term.includes("fish") || term.includes("kebab") || term.includes("wing")) return "🍗";
+            if (term.includes("soup")) return "🥣";
+            if (term.includes("roll") || term.includes("wrap") || term.includes("taco") || term.includes("burrito")) return "🌯";
+            if (term.includes("fry") || term.includes("fries")) return "🍟";
+            if (term.includes("sandwich") || term.includes("bread") || term.includes("toast")) return "🥪";
+            return "🍽️";
+        }
 
-<div class="hero d-flex justify-content-between align-items-center">
+        function renderStars(rating) {
+            const num = parseFloat(rating) || 0;
+            const fullStars = Math.floor(num);
+            const halfStar = (num % 1 >= 0.3 && num % 1 <= 0.7) ? 1 : 0;
+            const extraFull = num % 1 > 0.7 ? 1 : 0;
+            const totalFull = fullStars + extraFull;
+            const emptyStars = Math.max(0, 5 - totalFull - halfStar);
+            let starsHtml = "";
+            for (let i = 0; i < totalFull; i++) {
+                starsHtml += '<i class="fas fa-star text-warning"></i>';
+            }
+            if (halfStar) {
+                starsHtml += '<i class="fas fa-star-half-alt text-warning"></i>';
+            }
+            for (let i = 0; i < emptyStars; i++) {
+                starsHtml += '<i class="far fa-star text-secondary" style="opacity: 0.5;"></i>';
+            }
+            return starsHtml;
+        }
+    %>
 
-<div>
-<h1>🍔 Restaurant Dashboard</h1>
-<p>Restaurant Menu Management System</p>
-</div>
+    <div class="container py-5 fade-in-element">
+        
+        <!-- Dashboard Header -->
+        <header class="dashboard-header glass-container">
+            <div class="brand-section">
+                <h1>🍽️ Gusto Bistro</h1>
+                <p>Menu Manager & Analytics Dashboard</p>
+            </div>
+            <div>
+                <a href="/add" class="btn-action-main">
+                    <i class="fas fa-plus-circle"></i> Add Food Item
+                </a>
+            </div>
+        </header>
 
-<a href="/add" class="action-btn add-btn">
-➕ Add Food
-</a>
+        <!-- Stats Dashboard -->
+        <section class="stats-grid">
+            <div class="stat-card stat-primary">
+                <div class="stat-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div class="stat-details">
+                    <h3><%= stats.totalFoods %></h3>
+                    <p>Total Items</p>
+                </div>
+            </div>
+            
+            <div class="stat-card stat-info">
+                <div class="stat-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-details">
+                    <h3><%= stats.avgRating %></h3>
+                    <p>Average Rating</p>
+                </div>
+            </div>
+            
+            <div class="stat-card stat-success">
+                <div class="stat-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="stat-details">
+                    <h3>₹ <%= stats.totalValue.toLocaleString('en-IN') %></h3>
+                    <p>Total Value</p>
+                </div>
+            </div>
+            
+            <div class="stat-card stat-danger">
+                <div class="stat-icon">
+                    <i class="fas fa-triangle-exclamation"></i>
+                </div>
+                <div class="stat-details">
+                    <h3><%= stats.lowStock %></h3>
+                    <p>Low Stock Items</p>
+                </div>
+            </div>
+        </section>
 
-</div>
+        <!-- Toolbar: Search, Filters & View Toggle -->
+        <div class="glass-container mb-4">
+            <div class="dashboard-toolbar">
+                <!-- Search bar linking to search route -->
+                <form action="/search" method="GET" class="search-bar-container">
+                    <input type="text" name="keyword" class="search-input" placeholder="Search menu item..." required>
+                    <i class="fas fa-search"></i>
+                </form>
 
-<div class="stats">
+                <div class="toolbar-actions">
+                    <!-- Dropdown Sort Filter -->
+                    <div class="filter-dropdown">
+                        <button class="btn-filter-trigger" id="btnSortDropdown" onclick="toggleSortMenu(event)">
+                            <i class="fas fa-sliders"></i> Price Filter <i class="fas fa-chevron-down" style="font-size: 0.75rem;"></i>
+                        </button>
+                        <div class="filter-dropdown-menu" id="sortMenu">
+                            <a href="/?sort=asc" class="filter-dropdown-item">
+                                <i class="fas fa-sort-amount-up"></i> Price: Low to High
+                            </a>
+                            <a href="/?sort=desc" class="filter-dropdown-item">
+                                <i class="fas fa-sort-amount-down"></i> Price: High to Low
+                            </a>
+                            <a href="/" class="filter-dropdown-item">
+                                <i class="fas fa-rotate-left"></i> Reset Sorting
+                            </a>
+                        </div>
+                    </div>
 
-<div class="stat-box">
-<h2><%= foods.length %></h2>
-<p>Total Foods</p>
-</div>
+                    <!-- Layout Toggle Buttons -->
+                    <div class="layout-toggle-group">
+                        <button class="layout-toggle-btn active" id="toggleGridBtn" onclick="setViewMode('grid')" title="Grid View">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                        <button class="layout-toggle-btn" id="toggleTableBtn" onclick="setViewMode('table')" title="Table View">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-<div class="stat-box">
-<h2>⭐ 5.0</h2>
-<p>Ratings</p>
-</div>
+            <!-- Menu Content Section -->
+            <div class="menu-view-container">
+                <% if(foods.length === 0){ %>
+                    <div class="empty-state py-5">
+                        <i class="fas fa-hamburger"></i>
+                        <h3>Your Menu is Empty</h3>
+                        <p>Get started by adding your first restaurant culinary masterpiece to the dashboard.</p>
+                        <a href="/add" class="btn btn-action-main mx-auto">
+                            <i class="fas fa-plus"></i> Add First Item
+                        </a>
+                    </div>
+                <% } else { %>
+                    <!-- Visual Cards Grid View -->
+                    <div class="menu-grid" id="menuGrid">
+                        <% foods.forEach(food => { %>
+                            <div class="food-card-premium">
+                                <!-- Hover Actions -->
+                                <div class="card-hover-actions">
+                                    <a href="/edit/<%= food._id %>" class="action-circle-btn btn-edit" title="Edit Item">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <form action="/delete/<%= food._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                        <button type="submit" class="action-circle-btn btn-delete" title="Delete Item">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </div>
 
-<div class="stat-box">
-<h2>🍽️</h2>
-<p>Menu Items</p>
-</div>
+                                <div class="card-visual">
+                                    <div class="food-avatar">
+                                        <%= getFoodEmoji(food.foodName, food.category) %>
+                                    </div>
+                                    <span class="badge-cat-pill">
+                                        <%= food.category %>
+                                    </span>
+                                </div>
 
-<div class="stat-box">
-<h2>🚀</h2>
-<p>Management</p>
-</div>
+                                <div class="food-title-section">
+                                    <h4 title="<%= food.foodName %>"><%= food.foodName %></h4>
+                                    <div class="rating-stars">
+                                        <%- renderStars(food.rating) %>
+                                        <span class="rating-val">(<%= food.rating.toFixed(1) %>)</span>
+                                    </div>
+                                </div>
 
-</div>
+                                <div class="card-metrics-divider"></div>
 
-<div class="buttons">
+                                <div class="card-footer-metrics">
+                                    <div class="metric-price">
+                                        <span class="label">Price</span>
+                                        <span class="value">₹<%= food.price %></span>
+                                    </div>
+                                    <div class="metric-qty">
+                                        <span class="label">Stock Qty</span>
+                                        <% if(food.quantity <= 0) { %>
+                                            <span class="qty-badge out-of-stock">Out of Stock</span>
+                                        <% } else if(food.quantity < 5) { %>
+                                            <span class="qty-badge low-stock"><%= food.quantity %> Low</span>
+                                        <% } else { %>
+                                            <span class="qty-badge in-stock"><%= food.quantity %> Available</span>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
 
-<a href="/search" class="action-btn search-btn">
-🔍 Search Food
-</a>
+                    <!-- Clean Table List View (Hidden by default) -->
+                    <div class="table-responsive-premium d-none" id="menuTable">
+                        <table class="table-premium">
+                            <thead>
+                                <tr>
+                                    <th>Food Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Stock Status</th>
+                                    <th>Rating</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% foods.forEach(food => { %>
+                                    <tr>
+                                        <td>
+                                            <div class="food-name-cell">
+                                                <span class="icon"><%= getFoodEmoji(food.foodName, food.category) %></span>
+                                                <span><%= food.foodName %></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge-cat-pill"><%= food.category %></span>
+                                        </td>
+                                        <td>
+                                            <strong style="color: #10b981;">₹<%= food.price %></strong>
+                                        </td>
+                                        <td>
+                                            <% if(food.quantity <= 0) { %>
+                                                <span class="qty-badge out-of-stock">Out of Stock</span>
+                                            <% } else if(food.quantity < 5) { %>
+                                                <span class="qty-badge low-stock"><%= food.quantity %> Left</span>
+                                            <% } else { %>
+                                                <span class="qty-badge in-stock"><%= food.quantity %> In Stock</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <div class="rating-stars">
+                                                <%- renderStars(food.rating) %>
+                                                <span class="rating-val">(<%= food.rating.toFixed(1) %>)</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="table-actions-group">
+                                                <a href="/edit/<%= food._id %>" class="btn-table-action edit" title="Edit">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </a>
+                                                <form action="/delete/<%= food._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                                    <button type="submit" class="btn-table-action delete" title="Delete">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } %>
+            </div>
+        </div>
 
-<div class="filter-container">
+    </div>
 
-<button
-class="filter-btn"
-onclick="toggleFilter()"
->
-⚙️ Filters
-</button>
+    <!-- Scripts -->
+    <script>
+        // Set and persistent View Mode (Grid vs Table)
+        function setViewMode(mode) {
+            const gridEl = document.getElementById("menuGrid");
+            const tableEl = document.getElementById("menuTable");
+            const gridBtn = document.getElementById("toggleGridBtn");
+            const tableBtn = document.getElementById("toggleTableBtn");
 
-<div id="filterMenu" class="filter-menu">
+            if (!gridEl || !tableEl) return;
 
-<a href="/?sort=asc">
-⬆ Price: Low → High
-</a>
+            if (mode === "grid") {
+                gridEl.classList.remove("d-none");
+                tableEl.classList.add("d-none");
+                gridBtn.classList.add("active");
+                tableBtn.classList.remove("active");
+            } else {
+                gridEl.classList.add("d-none");
+                tableEl.classList.remove("d-none");
+                gridBtn.classList.remove("active");
+                tableBtn.classList.add("active");
+            }
 
-<a href="/?sort=desc">
-⬇ Price: High → Low
-</a>
+            localStorage.setItem("menuViewMode", mode);
+        }
 
-</div>
+        // Initialize view mode from storage
+        window.addEventListener("DOMContentLoaded", () => {
+            const savedMode = localStorage.getItem("menuViewMode") || "grid";
+            setViewMode(savedMode);
+        });
 
-</div>
+        // Dropdown toggle
+        function toggleSortMenu(e) {
+            e.stopPropagation();
+            const menu = document.getElementById("sortMenu");
+            const trigger = document.getElementById("btnSortDropdown");
+            menu.classList.toggle("show");
+            trigger.classList.toggle("active");
+        }
 
-</div>
+        // Close dropdown when clicking outside
+        window.addEventListener("click", () => {
+            const menu = document.getElementById("sortMenu");
+            const trigger = document.getElementById("btnSortDropdown");
+            if (menu && menu.classList.contains("show")) {
+                menu.classList.remove("show");
+                trigger.classList.remove("active");
+            }
+        });
 
-<div class="table-card">
-
-<% if(foods.length === 0){ %>
-
-<div class="empty">
-<h3>No Food Items Found</h3>
-</div>
-
-<% } else { %>
-
-<table class="table table-borderless">
-
-<thead>
-
-<tr>
-<th>Food Name</th>
-<th>Category</th>
-<th>Price</th>
-<th>Quantity</th>
-<th>Rating</th>
-<th>Actions</th>
-</tr>
-
-</thead>
-
-<tbody>
-
-<% foods.forEach(food => { %>
-
-<tr>
-
-<td><%= food.foodName %></td>
-
-<td>
-<span class="badge-category">
-<%= food.category %>
-</span>
-</td>
-
-<td>₹ <%= food.price %></td>
-
-<td>
-<span class="badge-quantity">
-<%= food.quantity %>
-</span>
-</td>
-
-<td class="rating">
-⭐ <%= food.rating %>
-</td>
-
-<td>
-
-<a
-href="/edit/<%= food._id %>"
-class="edit-btn"
->
-✏ Edit
-</a>
-
-<form
-action="/delete/<%= food._id %>"
-method="POST"
-style="display:inline;"
->
-
-<button
-type="submit"
-class="delete-btn"
->
-🗑 Delete
-</button>
-
-</form>
-
-</td>
-
-</tr>
-
-<% }) %>
-
-</tbody>
-
-</table>
-
-<% } %>
-
-</div>
-
-</div>
-
-<script>
-
-function toggleFilter(){
-
-const menu =
-document.getElementById("filterMenu");
-
-if(menu.style.display==="block"){
-menu.style.display="none";
-}
-else{
-menu.style.display="block";
-}
-
-}
-
-window.onclick=function(event){
-
-if(!event.target.matches('.filter-btn')){
-
-const menu=
-document.getElementById("filterMenu");
-
-if(menu.style.display==="block"){
-menu.style.display="none";
-}
-
-}
-
-}
-
-</script>
-
+        // Delete confirm dialog
+        function confirmDelete(foodName) {
+            return confirm(`Are you sure you want to delete "${foodName}" from the menu?`);
+        }
+    </script>
 </body>
 </html>
